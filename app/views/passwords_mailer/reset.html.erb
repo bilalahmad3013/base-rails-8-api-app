@@ -1,0 +1,6 @@
+<h2>You can reset your password within the next 2 hours</h2>
+<form id="password-reset-form" action="<%= @reset_url %>" method="POST">
+  <input type="password" id="new-password" name="new_password" placeholder="Enter new password" required>
+  <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm new password" required>
+  <button type="submit">Change Password</button>
+</form>
