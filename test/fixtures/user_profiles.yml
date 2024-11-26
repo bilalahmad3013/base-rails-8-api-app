@@ -2,12 +2,6 @@
 
 one:
   user: one
-  first_name: MyString
-  last_name: MyString
-  avatar: MyString
-
-two:
-  user: two
-  first_name: MyString
-  last_name: MyString
-  avatar: MyString
+  first_name: John
+  last_name: Doe
+  avatar: https://avtarimg.png

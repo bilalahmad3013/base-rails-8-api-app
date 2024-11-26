@@ -1,11 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  description: MyString
-  created_by_id: 1
-
-two:
-  name: MyString
-  description: MyString
-  created_by_id: 1
+  name: "Ongraph Workspace"
+  description: "A workspace for ongraph"
+  created_by_id:  <%= ActiveRecord::FixtureSet.identify(:one, :users) %>

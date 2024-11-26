@@ -2,10 +2,5 @@
 
 one:
   workspace: one
-  member_id: 1
+  member_id:  <%= ActiveRecord::FixtureSet.identify(:two, :users) %>
   workspace_role: one
-
-two:
-  workspace: two
-  member_id: 1
-  workspace_role: two
