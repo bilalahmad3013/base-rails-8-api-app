@@ -84,11 +84,3 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-
-queue:
-  <<: *default
-  database: queue
-
-cache:
-  <<: *default
-  database: cache
