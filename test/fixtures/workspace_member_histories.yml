@@ -1,0 +1,6 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  member_id: <%= ActiveRecord::FixtureSet.identify(:two, :users) %>
+  workspace_id: <%= ActiveRecord::FixtureSet.identify(:one, :workspaces) %>
+  workspace_role_id: <%= ActiveRecord::FixtureSet.identify(:one, :workspace_roles) %>

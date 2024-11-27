@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_25_095511) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_27_073202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "team_member_histories", force: :cascade do |t|
+    t.integer "member_id", null: false
+    t.integer "team_role_id", null: false
+    t.integer "team_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_role_id", "team_id", "member_id"], name: "index_team_member_histories_on_role_and_team", unique: true
+  end
 
   create_table "team_members", force: :cascade do |t|
     t.integer "member_id", null: false
@@ -50,8 +59,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_25_095511) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email"
-    t.string "encrypted_password"
+    t.string "email_address"
+    t.string "password_digest"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -61,7 +70,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_25_095511) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+  end
+
+  create_table "workspace_member_histories", force: :cascade do |t|
+    t.integer "member_id", null: false
+    t.integer "workspace_id", null: false
+    t.integer "workspace_role_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workspace_id", "workspace_role_id", "member_id"], name: "index_workspace_member_histories", unique: true
   end
 
   create_table "workspace_members", force: :cascade do |t|
@@ -89,6 +107,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_25_095511) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "team_member_histories", "team_roles"
+  add_foreign_key "team_member_histories", "teams"
+  add_foreign_key "team_member_histories", "users", column: "member_id"
   add_foreign_key "team_members", "team_roles"
   add_foreign_key "team_members", "teams"
   add_foreign_key "team_members", "users", column: "member_id"
