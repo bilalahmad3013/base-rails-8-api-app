@@ -10,17 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_27_073202) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_27_121140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "team_member_histories", force: :cascade do |t|
+  create_table "member_histories", force: :cascade do |t|
     t.integer "member_id", null: false
-    t.integer "team_role_id", null: false
-    t.integer "team_id", null: false
+    t.integer "workspace_id", null: false
+    t.integer "workspace_role_id", null: false
+    t.integer "team_id"
+    t.integer "team_role_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["team_role_id", "team_id", "member_id"], name: "index_team_member_histories_on_role_and_team", unique: true
+    t.index ["member_id", "workspace_id", "team_id", "team_role_id", "workspace_role_id"], name: "index_for_unique", unique: true
+    t.index ["member_id", "workspace_id", "workspace_role_id"], name: "index_member_histories_on_member_workspace_role", unique: true, where: "((team_id IS NULL) AND (team_role_id IS NULL))"
   end
 
   create_table "team_members", force: :cascade do |t|
@@ -29,6 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_27_073202) do
     t.integer "team_role_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["team_id", "member_id", "team_role_id"], name: "index_team_members_on_team_member_role", unique: true
   end
 
   create_table "team_roles", force: :cascade do |t|
@@ -73,21 +77,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_27_073202) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  create_table "workspace_member_histories", force: :cascade do |t|
-    t.integer "member_id", null: false
-    t.integer "workspace_id", null: false
-    t.integer "workspace_role_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["workspace_id", "workspace_role_id", "member_id"], name: "index_workspace_member_histories", unique: true
-  end
-
   create_table "workspace_members", force: :cascade do |t|
     t.bigint "workspace_id", null: false
     t.integer "member_id", null: false
     t.bigint "workspace_role_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["workspace_id", "member_id", "workspace_role_id"], name: "index_workspace_members_on_workspace_member_role", unique: true
     t.index ["workspace_id"], name: "index_workspace_members_on_workspace_id"
     t.index ["workspace_role_id"], name: "index_workspace_members_on_workspace_role_id"
   end
@@ -107,9 +103,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_27_073202) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "team_member_histories", "team_roles"
-  add_foreign_key "team_member_histories", "teams"
-  add_foreign_key "team_member_histories", "users", column: "member_id"
+  add_foreign_key "member_histories", "team_roles"
+  add_foreign_key "member_histories", "teams"
+  add_foreign_key "member_histories", "users", column: "member_id"
+  add_foreign_key "member_histories", "workspace_roles"
+  add_foreign_key "member_histories", "workspaces"
   add_foreign_key "team_members", "team_roles"
   add_foreign_key "team_members", "teams"
   add_foreign_key "team_members", "users", column: "member_id"
