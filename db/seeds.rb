@@ -11,11 +11,11 @@ User.create(email_address: "ba7254491@gmail.com", password_digest:"Jalnodea@123"
 User.create(email_address: "bilal@gmail.com", password_digest:"Jalnodea@123")
 User.create(email_address: "anzar@gmail.com", password_digest:"Jalnodea@123")
 
-User.first.workspaces.create(name: "Ongraph", description: "This workspace is for ongraph")
-User.first.workspaces.create(name: "Texo", description: "This workspace is for texo")
-
 WorkspaceRole.create(name: "Admin", description: "This is for admin role")
 WorkspaceRole.create(name: "Semi Admin", description: "This is for semi-admin role")
+
+User.first.workspaces.create(name: "Ongraph", description: "This workspace is for ongraph")
+User.first.workspaces.create(name: "Texo", description: "This workspace is for texo")
 
 WorkspaceMember.create(workspace_id: 1, member_id: 1, workspace_role_id: 1)
 WorkspaceMember.create(workspace_id: 1, member_id: 2, workspace_role_id: 1)
