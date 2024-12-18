@@ -5,10 +5,12 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
   root 'home#index'
+  get 'confirm_email/:token', to: 'user#confirm', as: 'confirmation'
 
   resource :session, only: [:create]
   resources :user, only: [:create] do
     delete 'destroy', on: :collection
+    post 'update', on: :collection
   end
   resources :password, only: [] do
     post 'forgot_password', on: :collection
@@ -17,5 +19,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  match "*unmatched", to: "unhandled#index", via: :all
+  # match "*unmatched", to: "unhandled#index", via: :all
 end

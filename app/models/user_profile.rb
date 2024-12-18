@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class UserProfile < ApplicationRecord
+  has_one_attached :avatar
   # Associations
   belongs_to :user
 

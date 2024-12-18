@@ -7,7 +7,6 @@ class SessionsController < ApplicationController
     @user = User.find_by_email_address(params[:user][:email_address])
     if @user&.authenticate(params[:user][:password])
       token = JsonWebToken.encode(user_id: @user.id)
-      time = Time.now + 24.hours.to_i
       api_success(data: {token: token, email: @user.email_address}, message:"Session created successfully")
     else
       render_failure(message: "Invalid email address or password.")

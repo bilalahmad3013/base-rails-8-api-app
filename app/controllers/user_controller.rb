@@ -1,50 +1,62 @@
 class UserController < ApplicationController
-  before_action :authorize_request, except: :create
+  before_action :authorize_request, except: [:create, :confirm]
 
   def create
     ActiveRecord::Base.transaction do
       @user = User.new(user_params)
 
       if @user.save
-        create_user_profile
+        workspace = @user.workspaces.new(workspace_params)
+
+        if workspace.save
+          render_success(message: 'Account and workspace created successfully')
+        else
+          raise ActiveRecord::Rollback, "Workspace creation failed: #{workspace.errors.full_messages.join(', ')}"
+        end
       else
-        raise ActiveRecord::Rollback
+        raise ActiveRecord::Rollback, "User creation failed: #{@user.errors.full_messages.join(', ')}"
       end
     end
+  rescue ActiveRecord::Rollback => e
+    render_failure(message: e.message)
+  end
 
-    if @user.persisted? && @user.user_profile.persisted?
-      render_success(message: 'Account create successfully')
-    else
-      render_failure(message: @user.errors.full_messages + @user.user_profile.errors.full_messages)
+  def update
+    if @current_user && @current_user.update(user_params)
+      render_success(message: 'Account updated successfully')
     end
   end
 
   def destroy
-    if @current_user&.destroy
+    if @current_user && @current_user.destroy
       render_success(message: 'Account deleted successfully')
     else
-      render_failure(message: current_user&.errors&.full_messages)
+      render_failure(message: 'Not Authorize to delete this account.')
+    end
+  end
+
+  def confirm
+    user = User.find_by(confirmation_token: params[:token])
+
+    if user && !user.confirmation_expired?
+      user.confirm!
+      render_success(message: 'Account confirmed successfully')
+    else
+      render_failure(message: 'Invalid or expired token')
     end
   end
 
   private
 
-  def create_user_profile
-    @user_profile = @user.build_user_profile(user_profile_params)
-
-    if @user_profile.save
-      Rails.logger.info "User profile created successfully for user #{@user.id}"
-    else
-      Rails.logger.error "Failed to create user profile for user #{@user.id}: #{@user_profile.errors.full_messages.join(', ')}"
-      raise ActiveRecord::Rollback
-    end
-  end
-
   def user_params
-    params.require(:user).permit(:email_address, :password)
+    params.require(:user).permit(
+      :email_address,
+      :password,
+      user_profile_attributes: [:first_name, :last_name, :avatar]
+    )
   end
 
-  def user_profile_params
-    params.require(:user).permit(:first_name, :last_name, :bio)
+  def workspace_params
+    params[:user][:workspaces_attributes].permit(:name, :description)
   end
 end
