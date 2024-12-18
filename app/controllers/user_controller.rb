@@ -7,7 +7,7 @@ class UserController < ApplicationController
 
       if @user.save
         workspace = @user.workspaces.new(workspace_params)
-        
+
         if workspace.save
           render_success(message: 'Account and workspace created successfully')
         else
@@ -24,21 +24,23 @@ class UserController < ApplicationController
   def update
     if @current_user && @current_user.update(user_params)
       render_success(message: 'Account updated successfully')
-    end  
+    end
   end
-  
+
   def destroy
     if @current_user && @current_user.destroy
       render_success(message: 'Account deleted successfully')
-    end  
+    else
+      render_failure(message: 'Not Authorize to delete this account.')
+    end
   end
-  
-  def confirm   
+
+  def confirm
     user = User.find_by(confirmation_token: params[:token])
 
     if user && !user.confirmation_expired?
       user.confirm!
-      render_success(message: 'Account confirmed successfully')      
+      render_success(message: 'Account confirmed successfully')
     else
       render_failure(message: 'Invalid or expired token')
     end
@@ -50,11 +52,11 @@ class UserController < ApplicationController
     params.require(:user).permit(
       :email_address,
       :password,
-      user_profile_attributes: [:first_name, :last_name, :avatar]      
+      user_profile_attributes: [:first_name, :last_name, :avatar]
     )
   end
 
   def workspace_params
     params[:user][:workspaces_attributes].permit(:name, :description)
-  end  
+  end
 end
