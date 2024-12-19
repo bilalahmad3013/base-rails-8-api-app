@@ -6,6 +6,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "valid user with all attributes" do
+    @user.password = "Jalnodea@123"
     assert @user.valid?
   end
 
@@ -26,12 +27,12 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "invalid password_diegest format" do
-    @user.password_digest = "password"
+    @user.password = "password"
     assert_not @user.valid?
   end
 
   test "valid password_diegest format" do
-    @user.password_digest = "Valid1!"
+    @user.password = "Valid1!"
     assert @user.valid?
   end
 

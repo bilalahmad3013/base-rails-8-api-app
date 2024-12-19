@@ -5,5 +5,5 @@ class UserProfile < ApplicationRecord
   belongs_to :user
 
   #Validations
-  validates :first_name, :last_name, :avatar, presence: true
+  validates :first_name, :last_name, presence: true
 end

@@ -21,12 +21,6 @@ class UserProfileTest < ActiveSupport::TestCase
     assert_includes @user_profile.errors[:last_name], "can't be blank"
   end
 
-  test "invalid without avatar" do
-    @user_profile.avatar = nil
-    assert_not @user_profile.valid?
-    assert_includes @user_profile.errors[:avatar], "can't be blank"
-  end
-
   test "belongs to a user" do
     assert_equal users(:one), @user_profile.user
   end
