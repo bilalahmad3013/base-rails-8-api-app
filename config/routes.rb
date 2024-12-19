@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     post 'update', on: :collection
   end
   resources :password, only: [] do
-    post 'forgot_password', on: :collection
+    get 'forgot_password', on: :collection
     post 'reset_password', on: :collection
   end
 

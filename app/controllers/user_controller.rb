@@ -11,10 +11,10 @@ class UserController < ApplicationController
         if workspace.save
           render_success(message: 'Account and workspace created successfully')
         else
-          raise ActiveRecord::Rollback, "Workspace creation failed: #{workspace.errors.full_messages.join(', ')}"
+          render_failure(message: workspace.errors.full_messages[0])
         end
       else
-        raise ActiveRecord::Rollback, "User creation failed: #{@user.errors.full_messages.join(', ')}"
+        render_failure(message: @user.errors.full_messages[0])
       end
     end
   rescue ActiveRecord::Rollback => e
@@ -40,9 +40,9 @@ class UserController < ApplicationController
 
     if user && !user.confirmation_expired?
       user.confirm!
-      render_success(message: 'Account confirmed successfully')
+      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true"
     else
-      render_failure(message: 'Invalid or expired token')
+      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true"
     end
   end
 

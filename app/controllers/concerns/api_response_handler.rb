@@ -49,7 +49,7 @@ module ApiResponseHandler
   # @param [ActiveModel::Serializer] serializer Optional serializer for custom data shaping.
   # @return [JSON] JSON response with data and status code.
   def api_success(data: nil, message: nil, status: :ok, serializer: nil)
-    response = { data:, message: }
+    response = { data:, message:, success: true }
 
     if serializer
       render json: response, status:, each_serializer: serializer

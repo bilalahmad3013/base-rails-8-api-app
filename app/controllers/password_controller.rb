@@ -20,9 +20,9 @@ class PasswordController < ApplicationController
     @user = User.find_by(email_address: params[:email_address])
     if @user && valid_token?(@user, params[:token]) && params[:new_password] === params[:confirm_password]
       @user.update(password: params[:new_password])
-      render_success(message: "Password updated successfully")
+      redirect_to "#{ENV['FRONTEND_URL']}?password_update_status=true"
     else
-      render_failure(message: "Validation failed")
+      redirect_to "#{ENV['FRONTEND_URL']}?password_update_status=false"
     end
   end
 
