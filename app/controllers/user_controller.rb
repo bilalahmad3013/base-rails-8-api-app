@@ -37,12 +37,11 @@ class UserController < ApplicationController
 
   def confirm
     user = User.find_by(confirmation_token: params[:token])
-
     if user && !user.confirmation_expired?
       user.confirm!
-      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true"
+      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true", allow_other_host: true
     else
-      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true"
+      redirect_to "#{ENV['FRONTEND_URL']}?confirmation_status=true", allow_other_host: true
     end
   end
 

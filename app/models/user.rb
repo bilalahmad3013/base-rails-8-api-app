@@ -30,6 +30,10 @@ class User < ApplicationRecord
     confirmation_sent_at < 24.hours.ago
   end
 
+  def confirmed?
+    confirmed_at != nil
+  end
+
   private
 
   def send_confirmation
