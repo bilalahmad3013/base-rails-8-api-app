@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_secure_password
   before_create :generate_confirmation_token
   before_destroy :destroy_member_history
-  after_create :send_confirmation
+  after_create :send_confirmation, :insert_into_bloom_filter
   # Associations
   has_one :user_profile, dependent: :destroy
   has_many :workspaces, foreign_key: :created_by_id, dependent: :destroy
@@ -35,6 +35,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def insert_into_bloom_filter
+    BLOOM_FILTER.insert(self.email_address)
+  end
 
   def send_confirmation
     UserMailer.confirmation_email(self).deliver_now

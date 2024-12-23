@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resource :session, only: [:create]
   resources :user, only: [:create] do
+    get 'find_user', on: :collection
     delete 'destroy', on: :collection
     post 'update', on: :collection
   end
